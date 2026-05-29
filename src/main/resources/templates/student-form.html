@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Add/Edit Student</title>
+    <!-- Bootstrap 5.3 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --border-color: #334155;
+            --input-focus: #6366f1;
+            --danger-color: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        /* Form Card */
+        .form-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent-gradient);
+        }
+
+        .form-title {
+            font-weight: 700;
+            color: var(--text-color);
+            letter-spacing: -0.02em;
+        }
+
+        .form-section-title {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Form Elements */
+        .form-label {
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            color: var(--text-color) !important;
+            border-radius: 0.5rem;
+            padding: 0.7rem 1rem;
+            transition: all 0.25s ease;
+        }
+
+        .form-control:focus {
+            background-color: rgba(15, 23, 42, 0.8);
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+            outline: none;
+        }
+
+        /* Form validation feedback */
+        .invalid-feedback-custom {
+            color: var(--danger-color);
+            font-size: 0.8rem;
+            margin-top: 0.35rem;
+            display: block;
+            font-weight: 500;
+        }
+
+        .is-invalid-custom {
+            border-color: var(--danger-color) !important;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2) !important;
+        }
+
+        /* Custom buttons */
+        .btn-gradient {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem 1.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-gradient:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.5);
+            color: white;
+        }
+
+        .btn-outline-custom {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-weight: 600;
+            padding: 0.75rem 1.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+            border-color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="dashboard-header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a th:href="@{/}" class="brand-logo">
+                <i class="bi bi-mortarboard-fill"></i>
+                EduPulse <span class="fs-6 fw-normal text-muted d-none d-sm-inline">| Teacher Portal</span>
+            </a>
+            <div>
+                <a th:href="@{/}" class="btn btn-outline-custom btn-sm py-2 px-3">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                
+                <!-- Form Card -->
+                <div class="form-card p-4 p-md-5">
+                    <div class="mb-4">
+                        <h3 class="form-title" th:text="${pageTitle}">Add Student</h3>
+                        <p class="text-muted small">Please fill out student details and individual course grades.</p>
+                    </div>
+
+                    <form th:action="@{/students/save}" th:object="${student}" method="post" class="needs-validation" novalidate>
+                        <!-- Hidden Student ID for updates -->
+                        <input type="hidden" th:field="*{id}" />
+
+                        <!-- Section 1: General Info -->
+                        <h6 class="form-section-title"><i class="bi bi-person-badge me-2 text-info"></i>Personal Information</h6>
+                        
+                        <div class="row g-3 mb-4">
+                            <!-- Student Name -->
+                            <div class="col-md-12">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" 
+                                       id="name" 
+                                       th:field="*{name}" 
+                                       class="form-control" 
+                                       placeholder="Enter student full name" 
+                                       required>
+                                <div class="invalid-feedback">Student name is required.</div>
+                            </div>
+                            
+                            <!-- Roll Number -->
+                            <div class="col-md-6">
+                                <label for="rollNumber" class="form-label">Roll Number</label>
+                                <input type="text" 
+                                       id="rollNumber" 
+                                       th:field="*{rollNumber}" 
+                                       class="form-control" 
+                                       th:classappend="${rollNumberError} ? 'is-invalid-custom'"
+                                       placeholder="e.g. STU101" 
+                                       required>
+                                <div class="invalid-feedback">Roll number is required.</div>
+                                <div class="invalid-feedback-custom" th:if="${rollNumberError}" th:text="${rollNumberError}">Error</div>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" 
+                                       id="email" 
+                                       th:field="*{email}" 
+                                       class="form-control" 
+                                       th:classappend="${emailError} ? 'is-invalid-custom'"
+                                       placeholder="student@example.com" 
+                                       required>
+                                <div class="invalid-feedback">Please provide a valid email address.</div>
+                                <div class="invalid-feedback-custom" th:if="${emailError}" th:text="${emailError}">Error</div>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Subject Marks -->
+                        <h6 class="form-section-title"><i class="bi bi-journal-check me-2 text-warning"></i>Subject Marks (Max 100 each)</h6>
+
+                        <div class="row g-3 mb-5">
+                            <!-- Math Marks -->
+                            <div class="col-md-4">
+                                <label for="mathMarks" class="form-label text-warning"><i class="bi bi-calculator me-1"></i>Mathematics</label>
+                                <input type="number" 
+                                       id="mathMarks" 
+                                       th:field="*{mathMarks}" 
+                                       class="form-control text-center" 
+                                       min="0" 
+                                       max="100" 
+                                       required>
+                                <div class="invalid-feedback">Marks must be between 0 and 100.</div>
+                            </div>
+                            
+                            <!-- Science Marks -->
+                            <div class="col-md-4">
+                                <label for="scienceMarks" class="form-label text-info"><i class="bi bi-atom me-1"></i>Science</label>
+                                <input type="number" 
+                                       id="scienceMarks" 
+                                       th:field="*{scienceMarks}" 
+                                       class="form-control text-center" 
+                                       min="0" 
+                                       max="100" 
+                                       required>
+                                <div class="invalid-feedback">Marks must be between 0 and 100.</div>
+                            </div>
+                            
+                            <!-- English Marks -->
+                            <div class="col-md-4">
+                                <label for="englishMarks" class="form-label text-success"><i class="bi bi-translate me-1"></i>English</label>
+                                <input type="number" 
+                                       id="englishMarks" 
+                                       th:field="*{englishMarks}" 
+                                       class="form-control text-center" 
+                                       min="0" 
+                                       max="100" 
+                                       required>
+                                <div class="invalid-feedback">Marks must be between 0 and 100.</div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top border-secondary border-opacity-50">
+                            <a th:href="@{/}" class="btn btn-outline-custom">Cancel</a>
+                            <button type="submit" class="btn btn-gradient">
+                                <i class="bi bi-save me-2"></i>Save Student
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 border-top border-secondary text-muted fs-7 mt-5">
+        <p class="mb-0">EduPulse Dashboard &copy; 2026. Made with Spring Boot & Thymeleaf.</p>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script to enable Bootstrap 5 form validation style -->
+    <script>
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+</body>
+</html>
